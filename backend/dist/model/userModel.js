@@ -11,20 +11,10 @@ var Gender;
     Gender["Male"] = "Laki - Laki";
     Gender["Female"] = "Perempuan";
 })(Gender || (Gender = {}));
-var UserType;
-(function (UserType) {
-    UserType["Driver"] = "Driver";
-    UserType["Human"] = "Human";
-})(UserType || (UserType = {}));
 const userSchema = new Schema({
     username: {
         type: String,
         required: [true, 'Please provide username']
-    },
-    userType: {
-        type: String,
-        enum: Object.values(UserType),
-        required: [true, 'Please provide user type']
     },
     address: {
         type: String,
@@ -41,7 +31,8 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        required: [true, 'Please provide email']
+        required: [true, 'Please provide email'],
+        match: [/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Please enter a valid email'],
     },
     password: {
         type: String,
@@ -66,6 +57,10 @@ const userSchema = new Schema({
                 ref: 'Chat'
             }
         }
-    ]
+    ],
+    phone: {
+        type: Number,
+        required: [true, 'Please provide phone number']
+    }
 });
 exports.userModel = mongoose_1.default.model('User', userSchema);

@@ -14,14 +14,8 @@ enum Gender {
     Female = "Perempuan"
 }
 
-enum UserType {
-    Driver = "Driver",
-    Human = "Human",
-}
-
 interface IUser {
     username: string;
-    userType: UserType;
     address: string;
     balance: number;
     email: string;
@@ -30,17 +24,13 @@ interface IUser {
     gender: Gender;
     order: Iorder[];
     chat: Ichat[];
+    phone: number
 }
 
 const userSchema = new Schema<IUser>({
     username: {
         type: String,
         required: [true, 'Please provide username']
-    },
-    userType: {
-        type: String,
-        enum: Object.values(UserType),
-        required: [true, 'Please provide user type']
     },
     address: {
         type: String,
@@ -57,7 +47,9 @@ const userSchema = new Schema<IUser>({
     },
     email: {
         type: String,
-        required: [true, 'Please provide email']
+        required: [true, 'Please provide email'],
+        match: [/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Please enter a valid email'],
+
     },
     password: {
         type: String,
@@ -82,7 +74,11 @@ const userSchema = new Schema<IUser>({
                 ref: 'Chat'
             }
         }
-    ]
+    ],
+    phone: {
+        type: Number,
+        required: [true, 'Please provide phone number']
+    }
 })
 
 export const userModel = mongoose.model('User', userSchema)

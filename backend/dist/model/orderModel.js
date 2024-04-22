@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.orderModel = exports.ItypeOrder = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const { Schema } = mongoose_1.default;
 var ItypeOrder;
@@ -11,12 +12,11 @@ var ItypeOrder;
     ItypeOrder["Food"] = "makanan";
     ItypeOrder["Drink"] = "minuman";
     ItypeOrder["Delivery"] = "kirim";
-})(ItypeOrder || (ItypeOrder = {}));
+})(ItypeOrder || (exports.ItypeOrder = ItypeOrder = {}));
 const orderSchema = new Schema({
     typeOrder: {
-        type: String,
-        enum: Object.values(ItypeOrder),
-        required: [true, 'Please provide type order']
+        type: Schema.Types.ObjectId,
+        ref: 'Services'
     },
     total: {
         type: Number,
@@ -50,5 +50,14 @@ const orderSchema = new Schema({
             type: Number
         },
         required: [true, 'Please provide your location']
+    },
+    cashOnDelivery: {
+        type: Boolean,
+        default: false,
+    },
+    isComplete: {
+        type: Boolean,
+        default: false
     }
 });
+exports.orderModel = mongoose_1.default.model('Order', orderSchema);

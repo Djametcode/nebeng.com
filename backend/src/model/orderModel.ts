@@ -1,7 +1,7 @@
-import mongoose, { Types } from "mongoose";
+import mongoose, { BooleanExpression, Types } from "mongoose";
 const { Schema } = mongoose;
 
-enum ItypeOrder {
+export enum ItypeOrder {
     Ride = "ojek",
     Food = "makanan",
     Drink = 'minuman',
@@ -10,11 +10,12 @@ enum ItypeOrder {
 
 interface Itaken {
     istTaken: boolean,
-    takenBy: Types.ObjectId
+    takenBy: Types.ObjectId,
+    isComplete: boolean
 }
 
 interface IorderDetail {
-    typeOrder: ItypeOrder,
+    typeOrder: Types.ObjectId,
     total: number,
     createdBy: Types.ObjectId,
     createdDate: Date,
@@ -22,14 +23,15 @@ interface IorderDetail {
     location: {
         latitude: number,
         longitude: number
-    }
+    },
+    cashOnDelivery: boolean,
+    isComplete: boolean
 }
 
 const orderSchema = new Schema<IorderDetail>({
     typeOrder: {
-        type: String,
-        enum: Object.values(ItypeOrder),
-        required: [true, 'Please provide type order']
+        type: Schema.Types.ObjectId,
+        ref: 'Services'
     },
     total: {
         type: Number,
@@ -63,5 +65,15 @@ const orderSchema = new Schema<IorderDetail>({
             type: Number
         },
         required: [true, 'Please provide your location']
+    },
+    cashOnDelivery: {
+        type: Boolean,
+        default: false,
+    },
+    isComplete: {
+        type: Boolean,
+        default: false
     }
 })
+
+export const orderModel = mongoose.model('Order', orderSchema);
